@@ -1,6 +1,6 @@
 # Product API Deployment
 
-Product API untuk latihan deployment backend: Express, MySQL, Docker Compose,
+Product API untuk latihan deployment backend: Express, MySQL-compatible MariaDB, Docker Compose,
 dan GitHub Actions.
 
 ## Endpoint
