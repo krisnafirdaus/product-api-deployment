@@ -42,4 +42,4 @@ jobs:
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           ssh -i ~/.ssh/vps_key -o IdentitiesOnly=yes "$VPS_USER@$VPS_HOST" \
-            "set -eu; cd '$VPS_PATH'; GIT_SSH_COMMAND=\"ssh -i \$HOME/.ssh/product-api-deploy -o IdentitiesOnly=yes\" git pull --ff-only origin main; docker compose up --build -d; curl --fail --retry 15 --retry-delay 2 --retry-connrefused http://127.0.0.1:8001/health"
+            "set -eu; cd '$VPS_PATH'; GIT_SSH_COMMAND=\"ssh -i \$HOME/.ssh/product-api-deploy -o IdentitiesOnly=yes\" git pull --ff-only origin main; docker compose up --build -d; for attempt in \$(seq 1 30); do if curl --fail --silent http://127.0.0.1:8001/health; then exit 0; fi; sleep 2; done; exit 1"
