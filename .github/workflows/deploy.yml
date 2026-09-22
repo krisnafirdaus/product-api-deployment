@@ -3,6 +3,7 @@ name: Test and deploy API
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -34,6 +35,6 @@ jobs:
           script: |
             set -eu
             cd "${{ secrets.VPS_PATH }}"
-            git pull --ff-only origin main
+            GIT_SSH_COMMAND="ssh -i $HOME/.ssh/product-api-deploy -o IdentitiesOnly=yes" git pull --ff-only origin main
             docker compose up --build -d
             curl --fail --retry 10 --retry-delay 2 "http://127.0.0.1:${HOST_PORT:-8001}/health"
