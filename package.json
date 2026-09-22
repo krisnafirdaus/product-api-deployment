@@ -1,0 +1,23 @@
+{
+  "name": "product-api-deployment",
+  "version": "1.0.0",
+  "description": "Production-ready Product API for the deployment exercise",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "lint": "node --check src/app.js && node --check src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
