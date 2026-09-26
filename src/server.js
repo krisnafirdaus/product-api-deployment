@@ -11,13 +11,14 @@ const requiredEnv = [
   "PORT",
 ];
 
+const disableDb = process.env.DISABLE_DB === "true";
+
 for (const key of requiredEnv) {
-  if (!process.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
+  if ((key !== "PORT" && disableDb) || process.env[key]) continue;
+  throw new Error(`Missing required environment variable: ${key}`);
 }
 
-const pool = mysql.createPool({
+const pool = disableDb ? null : mysql.createPool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   database: process.env.DB_NAME,
@@ -42,7 +43,7 @@ async function waitForDatabase({ attempts = 30, delayMs = 2000 } = {}) {
   }
 }
 
-await waitForDatabase();
+if (!disableDb) await waitForDatabase();
 
 const app = createApp({ pool });
 const port = Number(process.env.PORT);
@@ -53,7 +54,7 @@ const server = app.listen(port, () => {
 async function shutdown(signal) {
   console.log(`${signal} received, shutting down`);
   server.close(async () => {
-    await pool.end();
+    if (pool) await pool.end();
     process.exit(0);
   });
 }

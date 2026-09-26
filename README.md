@@ -22,6 +22,16 @@ curl http://localhost:8001/api/products
 `DB_HOST=mysql` harus memakai nama service Compose, bukan `localhost`.
 Jangan commit `.env` atau mengirim nilainya ke chat.
 
+Untuk menguji server tanpa database, jalankan image dengan `DISABLE_DB=true`:
+
+```bash
+docker build -t product-api:1.0 .
+docker run --rm -p 3000:3000 --env PORT=3000 --env DISABLE_DB=true product-api:1.0
+```
+
+Lalu buka `http://localhost:3000/health`. Endpoint `/api/products` mengembalikan
+HTTP 503 selama database dinonaktifkan.
+
 ## VPS setup
 
 ```bash

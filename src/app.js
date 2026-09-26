@@ -10,6 +10,9 @@ export function createApp({ pool }) {
   });
 
   app.get("/api/products", async (_req, res, next) => {
+    if (!pool) {
+      return res.status(503).json({ error: "Database is disabled" });
+    }
     try {
       const [rows] = await pool.query(
         "SELECT id, name, price, created_at FROM products ORDER BY id ASC",

@@ -28,6 +28,13 @@ test("GET /api/products returns products from the database", async () => {
   assert.deepEqual(response.body, fakeProducts);
 });
 
+test("GET /api/products returns 503 when the database is disabled", async () => {
+  const response = await request(createApp({ pool: null })).get("/api/products");
+
+  assert.equal(response.status, 503);
+  assert.deepEqual(response.body, { error: "Database is disabled" });
+});
+
 test("unknown routes return JSON 404", async () => {
   const response = await request(createApp({ pool })).get("/missing");
 
