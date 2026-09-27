@@ -9,6 +9,13 @@ export function createApp({ pool }) {
     res.status(200).json({ status: "ok" });
   });
 
+  app.get("/api/info", (_req, res) => {
+    res.status(200).json({
+      name: "Product API",
+      message: "Endpoint baru untuk latihan CI/CD",
+    });
+  });
+
   app.get("/api/products", async (_req, res, next) => {
     if (!pool) {
       return res.status(503).json({ error: "Database is disabled" });

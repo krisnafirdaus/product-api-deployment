@@ -9,6 +9,7 @@ MariaDB menggunakan protokol MySQL dan cocok dengan CPU VPS kelas.
 | Endpoint | Hasil |
 | --- | --- |
 | `GET /health` | HTTP 200, `{ "status": "ok" }` |
+| `GET /api/info` | HTTP 200, informasi aplikasi untuk latihan CI/CD; tidak membutuhkan database |
 | `GET /api/products` | HTTP 200, daftar produk dari database |
 
 Ini API JSON; membuka `/` menghasilkan HTTP 404. Database baru diisi tiga produk
@@ -181,6 +182,25 @@ git push origin main
 Workflow juga bisa dijalankan lewat **Actions → Test and deploy API → Run
 workflow**, pilih branch `main`. Pull request menjalankan test/lint tanpa deploy.
 Deploy pada `main` hanya berjalan setelah keduanya lulus.
+
+Untuk melihat hasil perubahan setelah workflow selesai, buka di Postman:
+
+```http
+GET http://<VPS_HOST>:<PORT_API>/api/info
+```
+
+Gunakan port akun sendiri (mentor `8001`, student sesuai penugasan). Responsnya:
+
+```json
+{
+  "name": "Product API",
+  "message": "Endpoint baru untuk latihan CI/CD"
+}
+```
+
+Endpoint ini tidak memeriksa status pipeline atau database; respons tersebut
+menjadi penanda bahwa kode endpoint baru sudah ter-deploy. Fork student perlu
+menerima perubahan ini dan menjalankan workflow pada repository sendiri.
 
 Workflow mengambil commit yang telah diuji, menyalakan Docker rootless untuk
 student, menjalankan Compose, lalu memastikan `/health` **dan** `/api/products`

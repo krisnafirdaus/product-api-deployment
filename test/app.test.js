@@ -21,6 +21,17 @@ test("GET /health returns a liveness response", async () => {
   assert.deepEqual(response.body, { status: "ok" });
 });
 
+test("GET /api/info returns JSON without requiring a database", async () => {
+  const response = await request(createApp({ pool: null })).get("/api/info");
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers["content-type"], /^application\/json\b/);
+  assert.deepEqual(response.body, {
+    name: "Product API",
+    message: "Endpoint baru untuk latihan CI/CD",
+  });
+});
+
 test("GET /api/products returns products from the database", async () => {
   const response = await request(createApp({ pool })).get("/api/products");
 
